@@ -1,0 +1,28 @@
+# Data and outputs: never commit
+data/
+*.nc
+*.tif
+*.tiff
+*.zip
+*.csv
+*.parquet
+manifest.csv
+
+# Credentials
+.cdsapirc
+.env
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+build/
+dist/
+
+# Editors / notebooks
+.vscode/
+.idea/
+.ipynb_checkpoints/

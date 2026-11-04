@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "airhealth"
+version = "0.1.0"
+description = "Data acquisition, quality control and health impact assessment for air pollution, toward a global air-quality digital twin."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Ibuki Terada" }]
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "requests"]
+
+[project.optional-dependencies]
+cams = ["cdsapi", "xarray", "netCDF4"]
+raster = ["rasterio"]
+dev = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/tevet2005/air-health-twin"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
