@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "airhealth"
 version = "0.1.0"
-description = "Data acquisition, quality control and health impact assessment for air pollution, toward a global air-quality digital twin."
+description = "Open air-quality health forecast for any location: PM2.5 and weather forecasts, QC and health impact assessment, toward a digital twin."
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Ibuki Terada" }]

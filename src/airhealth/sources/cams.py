@@ -104,6 +104,51 @@ def download_monthly(
     return done
 
 
+FORECAST_DATASET = "cams-global-atmospheric-composition-forecasts"
+
+
+def build_forecast_request(
+    run_date: str,
+    bbox: BoundingBox,
+    variables: Sequence[str] = ("particulate_matter_2.5um", "particulate_matter_10um"),
+    leadtime_hours: Sequence[int] = range(0, 121, 3),
+    run_time: str = "00:00",
+) -> dict:
+    """ADS request for one CAMS global forecast run (up to 120 h ahead)."""
+    return {
+        "variable": list(variables),
+        "date": f"{run_date}/{run_date}",
+        "time": [run_time],
+        "leadtime_hour": [str(h) for h in leadtime_hours],
+        "type": ["forecast"],
+        "data_format": "netcdf",
+        "area": bbox.as_cds_area(),
+    }
+
+
+def download_forecast(
+    run_date: str,
+    out_dir: str | Path,
+    bbox: BoundingBox = GLOBAL,
+    variables: Sequence[str] = ("particulate_matter_2.5um", "particulate_matter_10um"),
+    leadtime_hours: Sequence[int] = range(0, 121, 3),
+    client=None,
+) -> Path:
+    """Download a gridded CAMS global forecast run (``run_date`` as ``YYYY-MM-DD``)."""
+    if client is None:
+        import cdsapi
+
+        client = cdsapi.Client()
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{FORECAST_DATASET}_{bbox.tag()}_{run_date.replace('-', '')}.nc"
+    if not (path.exists() and path.stat().st_size > 0):
+        client.retrieve(FORECAST_DATASET,
+                        build_forecast_request(run_date, bbox, variables, leadtime_hours),
+                        str(path))
+    return path
+
+
 def main(argv: Sequence[str] | None = None) -> None:
     p = argparse.ArgumentParser(description="Download monthly CAMS/ADS NetCDF files.")
     p.add_argument("--bbox", nargs=4, type=float, metavar=("N", "W", "S", "E"),
